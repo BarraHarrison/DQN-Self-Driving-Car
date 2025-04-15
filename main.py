@@ -1,6 +1,7 @@
 import pygame
 import sys
 from car import Car
+from environment import Environment
 
 WIDTH, HEIGHT = 800, 700
 FPS = 60
@@ -13,6 +14,7 @@ def main():
 
     track = pygame.image.load("assets/new_map.png").convert()
     car = Car(420, 640)
+    env = Environment(track)
 
     running = True
     while running:
@@ -31,6 +33,15 @@ def main():
         car.move()
         car.update_sensors(track)
         car.draw(screen)
+
+        sensor_data = env.get_sensor_distances(car)
+        reward, done = env.calculate_reward(car)
+
+        print(f"Sensor: {sensor_data} | Reward: {reward} | Done: {done}")
+
+        if done:
+            print("Collision! Resetting car...")
+            car = Car(420, 420)
 
         pygame.display.flip()
         clock.tick(FPS)
