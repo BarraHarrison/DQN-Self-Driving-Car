@@ -18,6 +18,7 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Self-Driving Car - DQN")
+    pygame.event.pump()
     clock = pygame.time.Clock()
     font = pygame.font.SysFont("Arial", 20)
 
