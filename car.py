@@ -3,7 +3,10 @@ import math
 
 class Car:
     def __init__(self, x, y):
-        self.original_image = pygame.image.load("assets/car.png").convert_alpha()
+        car_image = pygame.image.load("assets/car.png").convert_alpha()
+        scaled_size = (30, 15)
+        self.original_image = pygame.transform.scale(car_image, scaled_size)
+
         self.image = self.original_image
         self.rect = self.image.get_rect(center=(x, y))
 
