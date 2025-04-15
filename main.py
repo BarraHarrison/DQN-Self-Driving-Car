@@ -22,7 +22,8 @@ def main():
     clock = pygame.time.Clock()
     font = pygame.font.SysFont("Arial", 20)
 
-    track = pygame.image.load("assets/new_map.png").convert()
+    original_map = pygame.image.load("assets/new_map.png").convert()
+    track = pygame.transform.scale(original_map, (WIDTH, HEIGHT))
     env = Environment(track)
 
     state_size = 5
@@ -33,7 +34,15 @@ def main():
     episode_rewards = []
 
     for episode in range(MAX_EPISODES):
-        car = Car(420, 640)
+        car = Car(420, 500)
+        spawn_attempts = 0
+        while env.check_collision(car):
+            car = Car(car.x, car.y - 5)
+            spawn_attempts += 1
+            if spawn_attempts > 20:
+                print("Failed to spawn on road. Skipping episode.")
+                continue
+            
         total_reward = 0
         done = False
 
