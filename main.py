@@ -34,7 +34,7 @@ def main():
     episode_rewards = []
 
     for episode in range(MAX_EPISODES):
-        car = Car(400, 670)
+        car = Car(400, 660)
         spawn_attempts = 0
         while env.check_collision(car):
             car = Car(car.x, car.y - 1)

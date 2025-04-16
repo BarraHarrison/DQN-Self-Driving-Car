@@ -4,19 +4,24 @@ import math
 class Car:
     def __init__(self, x, y):
         car_image = pygame.image.load("assets/car.png").convert_alpha()
-        scaled_size = (30, 15)
+        scaled_size = (40, 20)
         self.original_image = pygame.transform.scale(car_image, scaled_size)
-        self.image = self.original_image
 
         self.x = x
         self.y = y
         self.angle = 0
         self.speed = 5
 
-        self.rect = self.image.get_rect(center=(x, y))
+        self.image = self.original_image
+        self.update_image()
+
         self.sensors = []
         self.sensor_length = 100
         self.sensor_angles = [-90, -45, 0, 45, 90]
+
+    def update_image(self):
+        self.image = pygame.transform.rotate(self.original_image, self.angle)
+        self.rect = self.image.get_rect(center=(self.x, self.y))
 
     def move(self):
         rad = math.radians(self.angle)
