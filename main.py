@@ -72,6 +72,7 @@ def main():
                 for s, a, r, s_next, d in zip(*batch):
                     agent.train_step(s, a, r, s_next, d)
 
+            pygame.draw.circle(screen, (0, 255, 0), (car.x, car.y), 3)
             pygame.display.flip()
             clock.tick(FPS)
 
