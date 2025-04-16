@@ -37,9 +37,9 @@ def main():
         car = Car(400, 620)
         spawn_attempts = 0
         while env.check_collision(car):
-            car = Car(car.x, car.y - 5)
+            car = Car(car.x, car.y - 1)
             spawn_attempts += 1
-            if spawn_attempts > 20:
+            if spawn_attempts > 30:
                 print("Failed to spawn on road. Skipping episode.")
                 continue
             
