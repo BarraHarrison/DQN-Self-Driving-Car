@@ -32,7 +32,7 @@ def main():
 
     episode_rewards = []
 
-    spawn_x, spawn_y = 435, 665
+    spawn_x, spawn_y = 460, 600
     print("Pixel color at spawn:", original_map.get_at((spawn_x, spawn_y)))
 
     for episode in range(MAX_EPISODES):
