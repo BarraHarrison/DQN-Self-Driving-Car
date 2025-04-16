@@ -52,16 +52,7 @@ def main():
 
         car = Car(spawn_x, spawn_y)
         car.angle = 90
-
-        spawn_attempts = 0
-        
-        while env.check_collision(car):
-            car = Car(car.x, car.y - 1)
-            spawn_attempts += 1
-            if spawn_attempts > 30:
-                print("Failed to spawn on road. Skipping episode.")
-                continue
-            
+    
         total_reward = 0
         done = False
 
