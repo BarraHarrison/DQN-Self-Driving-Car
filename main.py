@@ -6,7 +6,7 @@ from dqn_agent import DQNAgent
 from replay_buffer import ReplayBuffer
 import matplotlib.pyplot as plt
 
-# Constants
+
 WIDTH, HEIGHT = 800, 700
 FPS = 60
 MAX_EPISODES = 500
@@ -34,7 +34,7 @@ def main():
     episode_rewards = []
 
     for episode in range(MAX_EPISODES):
-        car = Car(400, 620)
+        car = Car(400, 670)
         spawn_attempts = 0
         while env.check_collision(car):
             car = Car(car.x, car.y - 1)
@@ -72,7 +72,7 @@ def main():
                 for s, a, r, s_next, d in zip(*batch):
                     agent.train_step(s, a, r, s_next, d)
 
-            pygame.draw.circle(screen, (0, 255, 0), (car.x, car.y), 3)
+            pygame.draw.circle(screen, (0, 255, 0), (int(car.x), int(car.y)), 5)
             pygame.display.flip()
             clock.tick(FPS)
 

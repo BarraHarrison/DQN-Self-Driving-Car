@@ -6,15 +6,14 @@ class Car:
         car_image = pygame.image.load("assets/car.png").convert_alpha()
         scaled_size = (30, 15)
         self.original_image = pygame.transform.scale(car_image, scaled_size)
-
         self.image = self.original_image
-        self.rect = self.image.get_rect(center=(x, y))
 
         self.x = x
         self.y = y
         self.angle = 0
         self.speed = 5
 
+        self.rect = self.image.get_rect(center=(x, y))
         self.sensors = []
         self.sensor_length = 100
         self.sensor_angles = [-90, -45, 0, 45, 90]
