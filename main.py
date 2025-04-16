@@ -14,6 +14,17 @@ BATCH_SIZE = 64
 REPLAY_CAPACITY = 10000
 TARGET_UPDATE_FREQ = 10
 
+
+def find_spawn_on_road(surface):
+    width, height = surface.get_size()
+    for y in reversed(range(height - 50, height)):
+        for x in range(width // 2 - 50, width // 2 + 50):
+            if surface.get_at((x, y)) == pygame.Color(0, 0, 0, 255):
+                return x, y
+            
+    return None, None
+
+
 def main():
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -34,8 +45,16 @@ def main():
     episode_rewards = []
 
     for episode in range(MAX_EPISODES):
-        car = Car(400, 660)
+        spawn_x, spawn_y = find_spawn_on_road(original_map)
+        if spawn_x is None:
+            print("Could not find a valid spawn position")
+            continue
+
+        car = Car(spawn_x, spawn_y)
+        car.angle = 90
+
         spawn_attempts = 0
+        
         while env.check_collision(car):
             car = Car(car.x, car.y - 1)
             spawn_attempts += 1
