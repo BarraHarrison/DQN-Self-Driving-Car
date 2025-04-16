@@ -32,12 +32,12 @@ def main():
 
     episode_rewards = []
 
-    spawn_x, spawn_y = 420, 665
+    spawn_x, spawn_y = 435, 665
     print("Pixel color at spawn:", original_map.get_at((spawn_x, spawn_y)))
 
     for episode in range(MAX_EPISODES):
         car = Car(spawn_x, spawn_y)
-        car.angle = 90
+        car.angle = 0
 
         total_reward = 0
         done = False
