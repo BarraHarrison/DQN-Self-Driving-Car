@@ -13,6 +13,9 @@ MAX_EPISODES = 500
 BATCH_SIZE = 64
 REPLAY_CAPACITY = 10000
 TARGET_UPDATE_FREQ = 10
+LOAD_MODEL = True
+EVAL_ONLY = True
+MODEL_PATH = "checkpoints/dqn_episode_50_reward_412.pth"
 
 def main():
     pygame.init()
@@ -64,7 +67,7 @@ def main():
 
             memory.push(state, action, reward, next_state, done)
 
-            if len(memory) >= BATCH_SIZE:
+            if not EVAL_ONLY and len(memory) >= BATCH_SIZE:
                 batch = memory.sample(BATCH_SIZE)
                 for s, a, r, s_next, d in zip(*batch):
                     agent.train_step(s, a, r, s_next, d)
@@ -82,6 +85,11 @@ def main():
 
         if (episode + 1) % TARGET_UPDATE_FREQ == 0:
             agent.update_target_model()
+
+        if LOAD_MODEL:
+            agent.model.load_state_dict(torch.load(MODEL_PATH))
+            agent.model.eval()
+            print(f"📥 Loaded model from: {MODEL_PATH}")
 
     pygame.quit()
     sys.exit()
