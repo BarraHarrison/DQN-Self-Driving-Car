@@ -31,8 +31,15 @@ def main():
 
     state_size = 5
     action_size = 3
+
     agent = DQNAgent(state_size, action_size)
     memory = ReplayBuffer(REPLAY_CAPACITY)
+
+    if LOAD_MODEL:
+            agent.model.load_state_dict(torch.load(MODEL_PATH))
+            agent.model.eval()
+            agent.epsilon = 0.0
+            print(f"📥 Loaded model from: {MODEL_PATH}")
 
     episode_rewards = []
 
@@ -86,11 +93,6 @@ def main():
         if (episode + 1) % TARGET_UPDATE_FREQ == 0:
             agent.update_target_model()
 
-        if LOAD_MODEL:
-            agent.model.load_state_dict(torch.load(MODEL_PATH))
-            agent.model.eval()
-            agent.epsilon = 0.0
-            print(f"📥 Loaded model from: {MODEL_PATH}")
 
     pygame.quit()
     sys.exit()
