@@ -1,5 +1,6 @@
 import pygame
 import sys
+import torch
 from car import Car
 from environment import Environment
 from dqn_agent import DQNAgent
@@ -74,6 +75,10 @@ def main():
 
         episode_rewards.append(total_reward)
         print(f"Episode {episode + 1} | Total Reward: {total_reward:.2f} | Epsilon: {agent.epsilon:.3f}")
+        if total_reward >= 400:
+            model_path = f"checkpoints/dqn_episode_{episode + 1}_reward_{int(total_reward)}.pth"
+            torch.save(agent.model.state_dict(), model_path)
+            print(f"✅ Model saved: {model_path}")
 
         if (episode + 1) % TARGET_UPDATE_FREQ == 0:
             agent.update_target_model()
