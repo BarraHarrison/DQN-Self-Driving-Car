@@ -89,6 +89,7 @@ def main():
         if LOAD_MODEL:
             agent.model.load_state_dict(torch.load(MODEL_PATH))
             agent.model.eval()
+            agent.epsilon = 0.0
             print(f"📥 Loaded model from: {MODEL_PATH}")
 
     pygame.quit()
