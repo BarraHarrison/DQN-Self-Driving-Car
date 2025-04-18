@@ -75,7 +75,7 @@ def main():
                 lap_count += 1
                 was_far_from_start = False
                 print(f"🏁 Lap completed! Total laps: {lap_count}")
-                
+
             car.draw(screen)
 
             next_state = env.get_sensor_distances(car)
@@ -95,7 +95,7 @@ def main():
             clock.tick(FPS)
 
         episode_rewards.append(total_reward)
-        print(f"Episode {episode + 1} | Total Reward: {total_reward:.2f} | Epsilon: {agent.epsilon:.3f}")
+        print(f"Episode {episode + 1} | Total Reward: {total_reward:.2f} | Laps: {lap_count} | Epsilon: {agent.epsilon:.3f}")
 
         if not EVAL_ONLY and total_reward >= 400:
             model_path = f"checkpoints/dqn_episode_{episode + 1}_reward_{int(total_reward)}.pth"
