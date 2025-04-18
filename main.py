@@ -42,7 +42,8 @@ def main():
 
 
     spawn_x, spawn_y = 460, 600
-    START_LINE_RECT = pygame.Rect(440, 590, 40, 20)
+    START_LINE_RECT = pygame.Rect(430, 580, 80, 40)
+    pygame.draw.rect(screen, (0, 255, 255), START_LINE_RECT, 2)
     print("Pixel color at spawn:", original_map.get_at((spawn_x, spawn_y)))
     episode_rewards = []
 
@@ -75,6 +76,7 @@ def main():
                 lap_count += 1
                 was_far_from_start = False
                 print(f"🏁 Lap completed! Total laps: {lap_count}")
+                print(f"📍 Car position: {car_pos}")
 
             car.draw(screen)
 
