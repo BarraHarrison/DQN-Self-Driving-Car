@@ -37,7 +37,7 @@ def main():
     if LOAD_MODEL:
             agent.model.load_state_dict(torch.load(MODEL_PATH, map_location=torch.device('cpu')))
             agent.model.eval()
-            agent.epsilon = 0.0
+            agent.epsilon = 0.1
             print(f"📥 Loaded model from: {MODEL_PATH}")
 
 
