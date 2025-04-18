@@ -42,11 +42,14 @@ def main():
 
 
     spawn_x, spawn_y = 460, 600
+    START_LINE_RECT = pygame.Rect(440, 590, 40, 20)
     print("Pixel color at spawn:", original_map.get_at((spawn_x, spawn_y)))
     episode_rewards = []
 
     for episode in range(MAX_EPISODES):
         car = Car(spawn_x, spawn_y)
+        lap_count = 0
+        was_far_from_start = False
         car.angle = 0
         total_reward = 0
         done = False
