@@ -66,6 +66,16 @@ def main():
                 car.rotate(-5)
             car.move()
             car.update_sensors(track)
+            car_pos = pygame.Vector2(car.x, car.y)
+
+            if not START_LINE_RECT.collidepoint(car_pos):
+                was_far_from_start = True
+
+            if was_far_from_start and START_LINE_RECT.collidepoint(car_pos):
+                lap_count += 1
+                was_far_from_start = False
+                print(f"🏁 Lap completed! Total laps: {lap_count}")
+                
             car.draw(screen)
 
             next_state = env.get_sensor_distances(car)
