@@ -17,6 +17,7 @@ TARGET_UPDATE_FREQ = 10
 LOAD_MODEL = True
 EVAL_ONLY = True
 MODEL_PATH = "checkpoints/dqn_episode_50_reward_412.pth"
+LAP_COMPLETION_RADIUS = 100
 
 def main():
     pygame.init()
@@ -77,11 +78,11 @@ def main():
             if distance_to_start > 150:
                 was_far_enough = True
 
-            if was_far_enough and distance_to_start < 50 and lap_cooldown == 0:
-                laps_completed += 1
-                lap_cooldown = 60
+            if was_far_enough and distance_to_start <= LAP_COMPLETION_RADIUS and lap_cooldown == 0:
+                lap_count += 1
+                print(f"🏁 Lap completed! Total laps: {lap_count}")
                 was_far_enough = False
-                print("🏁 Lap completed!")
+                lap_cooldown = 60
 
 
             if lap_cooldown > 0:
