@@ -1,4 +1,5 @@
 import pygame
+import time
 import sys
 import torch
 import math
@@ -73,14 +74,19 @@ def main():
             car.update_sensors(track)
             car_pos = pygame.Vector2(car.x, car.y)
             distance_to_start = math.hypot(car.x - spawn_x, car.y - spawn_y)
-            print(f"Distance to start: {distance_to_start:.2f}, Was far enough: {was_far_enough}, Lap cooldown: {lap_cooldown}")
+            # print(f"Distance to start: {distance_to_start:.2f}, Was far enough: {was_far_enough}, Lap cooldown: {lap_cooldown}")
 
             if distance_to_start > 150:
                 was_far_enough = True
 
             if was_far_enough and distance_to_start <= LAP_COMPLETION_RADIUS and lap_cooldown == 0:
                 lap_count += 1
+                lap_end_time = time.time()
+                lap_duration = lap_end_time - Car.lap_start_time
+                Car.lap_times.append(lap_duration)
                 print(f"🏁 Lap completed! Total laps: {lap_count}")
+                print(f"⏱️ Lap time: {lap_duration:.2f} seconds")
+                Car.lap_start_time = lap_end_time
                 was_far_enough = False
                 lap_cooldown = 60
 

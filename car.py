@@ -1,5 +1,6 @@
 import pygame
 import math
+import time
 
 class Car:
     def __init__(self, x, y):
@@ -18,6 +19,9 @@ class Car:
         self.sensors = []
         self.sensor_length = 100
         self.sensor_angles = [-90, -45, 0, 45, 90]
+
+        self.lap_start_time = time.time()
+        self.lap_times = []
 
     def update_image(self):
         self.image = pygame.transform.rotate(self.original_image, self.angle)
