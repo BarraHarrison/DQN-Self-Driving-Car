@@ -99,12 +99,18 @@ def main():
                 lap_cooldown -= 1
 
             car.draw(screen)
+            next_state = env.get_sensor_distances(car)
+
             font.render_to(screen, (10, 10), f"Laps: {lap_count}", (255, 255, 255))
             if car.lap_times:
                 last_lap_time = car.lap_times[-1]
                 font.render_to(screen, (10, 40), f"Last Lap: {last_lap_time:.2f}s", (255, 255, 255))
 
-            next_state = env.get_sensor_distances(car)
+            pygame.draw.circle(screen, (0, 255, 0), (int(car.x), int(car.y)), 5)
+            clock.tick(FPS)
+            pygame.display.flip()
+
+
             reward, done = env.calculate_reward(car)
             total_reward += reward
 
@@ -117,8 +123,8 @@ def main():
                     agent.train_step(s, a, r, s_next, d)
 
             pygame.draw.circle(screen, (0, 255, 0), (int(car.x), int(car.y)), 5)
-            pygame.display.flip()
             clock.tick(FPS)
+            pygame.display.flip()
 
         episode_rewards.append(total_reward)
         print(f"Episode {episode + 1} | Total Reward: {total_reward:.2f} | Laps: {lap_count} | Epsilon: {agent.epsilon:.3f}")
@@ -130,7 +136,6 @@ def main():
 
         if not EVAL_ONLY and (episode + 1) % TARGET_UPDATE_FREQ == 0:
             agent.update_target_model()
-
 
     pygame.quit()
     sys.exit()
