@@ -50,7 +50,9 @@ def main():
     for episode in range(MAX_EPISODES):
         car = Car(spawn_x, spawn_y)
         lap_count = 0
-        was_far_from_start = False
+        was_far_enough = False
+        lap_cooldown = 0
+        start_pos = pygame.Vector2(spawn_x, spawn_y)
         car.angle = 0
         total_reward = 0
         done = False
@@ -68,15 +70,20 @@ def main():
             car.move()
             car.update_sensors(track)
             car_pos = pygame.Vector2(car.x, car.y)
+            distance_to_start = car_pos.distance_to(start_pos)
 
-            if not START_LINE_RECT.collidepoint(car_pos):
-                was_far_from_start = True
+            if distance_to_start > 150:
+                was_far_enough = True
 
-            if was_far_from_start and START_LINE_RECT.collidepoint(car_pos):
+            if lap_cooldown == 0 and was_far_enough and distance_to_start < 40:
                 lap_count += 1
-                was_far_from_start = False
+                was_far_enough = False
+                lap_cooldown = 120
                 print(f"🏁 Lap completed! Total laps: {lap_count}")
                 print(f"📍 Car position: {car_pos}")
+
+            if lap_cooldown > 0:
+                lap_cooldown -= 1
 
             car.draw(screen)
 
