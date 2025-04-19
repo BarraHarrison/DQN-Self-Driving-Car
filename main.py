@@ -1,6 +1,7 @@
 import pygame
 import sys
 import torch
+import math
 from car import Car
 from environment import Environment
 from dqn_agent import DQNAgent
@@ -70,18 +71,18 @@ def main():
             car.move()
             car.update_sensors(track)
             car_pos = pygame.Vector2(car.x, car.y)
-            distance_to_start = car_pos.distance_to(start_pos)
+            distance_to_start = math.hypot(car.x - spawn_x, car.y - spawn_y)
             print(f"Distance to start: {distance_to_start:.2f}, Was far enough: {was_far_enough}, Lap cooldown: {lap_cooldown}")
 
-            if not was_far_enough and distance_to_start > 150:
+            if distance_to_start > 150:
                 was_far_enough = True
-                print("📍 Marked as far enough to allow future lap detection")
 
-            if was_far_enough and lap_cooldown == 0 and distance_to_start < 40:
-                lap_count += 1
+            if was_far_enough and distance_to_start < 50 and lap_cooldown == 0:
+                laps_completed += 1
+                lap_cooldown = 60
                 was_far_enough = False
-                lap_cooldown = 120
-                print(f"🏁 Lap completed! Total laps: {lap_count}")
+                print("🏁 Lap completed!")
+
 
             if lap_cooldown > 0:
                 lap_cooldown -= 1
