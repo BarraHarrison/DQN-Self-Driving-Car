@@ -71,17 +71,17 @@ def main():
             car.update_sensors(track)
             car_pos = pygame.Vector2(car.x, car.y)
             distance_to_start = car_pos.distance_to(start_pos)
-            print(f"Distance to start: {distance_to_start:.2f}")
+            print(f"Distance to start: {distance_to_start:.2f}, Was far enough: {was_far_enough}, Lap cooldown: {lap_cooldown}")
 
-            if distance_to_start > 150:
+            if not was_far_enough and distance_to_start > 150:
                 was_far_enough = True
+                print("📍 Marked as far enough to allow future lap detection")
 
-            if lap_cooldown == 0 and was_far_enough and distance_to_start < 40:
+            if was_far_enough and lap_cooldown == 0 and distance_to_start < 40:
                 lap_count += 1
                 was_far_enough = False
                 lap_cooldown = 120
                 print(f"🏁 Lap completed! Total laps: {lap_count}")
-                print(f"📍 Car position: {car_pos}")
 
             if lap_cooldown > 0:
                 lap_cooldown -= 1
