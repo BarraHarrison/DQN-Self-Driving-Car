@@ -3,11 +3,13 @@ import time
 import sys
 import torch
 import math
+import matplotlib.pyplot as plt
+import pygame.freetype
 from car import Car
 from environment import Environment
 from dqn_agent import DQNAgent
 from replay_buffer import ReplayBuffer
-import matplotlib.pyplot as plt
+
 
 WIDTH, HEIGHT = 800, 700
 FPS = 60
@@ -22,6 +24,8 @@ LAP_COMPLETION_RADIUS = 100
 
 def main():
     pygame.init()
+    pygame.freetype.init()
+    font = pygame.freetype.SysFont("Arial", 24)
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Self-Driving Car - DQN")
     pygame.event.pump()
@@ -95,6 +99,10 @@ def main():
                 lap_cooldown -= 1
 
             car.draw(screen)
+            font.render_to(screen, (10, 10), f"Laps: {lap_count}", (255, 255, 255))
+            if car.lap_times:
+                last_lap_time = car.lap_times[-1]
+                font.render_to(screen, (10, 40), f"Last Lap: {last_lap_time:.2f}s", (255, 255, 255))
 
             next_state = env.get_sensor_distances(car)
             reward, done = env.calculate_reward(car)
