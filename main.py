@@ -76,15 +76,15 @@ def main():
                 car.rotate(-5)
             car.move()
             car.update_sensors(track)
+
             car_pos = pygame.Vector2(car.x, car.y)
             distance_to_start = math.hypot(car.x - spawn_x, car.y - spawn_y)
-            # print(f"Distance to start: {distance_to_start:.2f}, Was far enough: {was_far_enough}, Lap cooldown: {lap_cooldown}")
 
             if distance_to_start > 150:
                 was_far_enough = True
 
             if was_far_enough and distance_to_start <= LAP_COMPLETION_RADIUS and lap_cooldown == 0:
-                car.lap_count += 1
+                lap_count += 1
                 lap_end_time = time.time()
                 lap_duration = lap_end_time - car.lap_start_time
                 car.lap_times.append(lap_duration)
@@ -94,25 +94,27 @@ def main():
                 was_far_enough = False
                 lap_cooldown = 60
 
-
             if lap_cooldown > 0:
                 lap_cooldown -= 1
 
-            next_state = env.get_sensor_distances(car)
+            car.draw(screen)
 
+            next_state = env.get_sensor_distances(car)
             reward, done = env.calculate_reward(car)
             total_reward += reward
 
-            car.draw(screen)
+            if not EVAL_ONLY:
+                memory.push(state, action, reward, next_state, done)
+
+            if not EVAL_ONLY and len(memory) >= BATCH_SIZE:
+                batch = memory.sample(BATCH_SIZE)
+                for s, a, r, s_next, d in zip(*batch):
+                    agent.train_step(s, a, r, s_next, d)
+
             pygame.draw.circle(screen, (0, 255, 0), (int(car.x), int(car.y)), 5)
-
-            font.render_to(screen, (10, 10), f"Laps: {car.lap_count}", (0, 0, 0))
-            if car.lap_times:
-                last_lap_time = car.lap_times[-1]
-                font.render_to(screen, (10, 40), f"Last Lap: {last_lap_time:.2f}s", (0, 0, 0))
-
             pygame.display.flip()
             clock.tick(FPS)
+
 
             if not EVAL_ONLY:
                 memory.push(state, action, reward, next_state, done)
