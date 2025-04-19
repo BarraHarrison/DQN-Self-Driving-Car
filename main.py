@@ -70,6 +70,7 @@ def main():
             car.move()
             car.update_sensors(track)
             car_pos = pygame.Vector2(car.x, car.y)
+            print(f"Distance to start: {distance_to_start:.2f}")
             distance_to_start = car_pos.distance_to(start_pos)
 
             if distance_to_start > 150:
