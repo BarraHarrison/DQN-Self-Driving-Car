@@ -115,19 +115,6 @@ def main():
             pygame.display.flip()
             clock.tick(FPS)
 
-
-            if not EVAL_ONLY:
-                memory.push(state, action, reward, next_state, done)
-
-            if not EVAL_ONLY and len(memory) >= BATCH_SIZE:
-                batch = memory.sample(BATCH_SIZE)
-                for s, a, r, s_next, d in zip(*batch):
-                    agent.train_step(s, a, r, s_next, d)
-
-            pygame.draw.circle(screen, (0, 255, 0), (int(car.x), int(car.y)), 5)
-            clock.tick(FPS)
-            pygame.display.flip()
-
         episode_rewards.append(total_reward)
         print(f"Episode {episode + 1} | Total Reward: {total_reward:.2f} | Laps: {lap_count} | Epsilon: {agent.epsilon:.3f}")
 
