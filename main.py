@@ -82,11 +82,11 @@ def main():
             if was_far_enough and distance_to_start <= LAP_COMPLETION_RADIUS and lap_cooldown == 0:
                 lap_count += 1
                 lap_end_time = time.time()
-                lap_duration = lap_end_time - Car.lap_start_time
-                Car.lap_times.append(lap_duration)
+                lap_duration = lap_end_time - car.lap_start_time
+                car.lap_times.append(lap_duration)
                 print(f"🏁 Lap completed! Total laps: {lap_count}")
                 print(f"⏱️ Lap time: {lap_duration:.2f} seconds")
-                Car.lap_start_time = lap_end_time
+                car.lap_start_time = lap_end_time
                 was_far_enough = False
                 lap_cooldown = 60
 
