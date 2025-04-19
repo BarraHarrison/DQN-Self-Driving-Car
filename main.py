@@ -84,7 +84,7 @@ def main():
                 was_far_enough = True
 
             if was_far_enough and distance_to_start <= LAP_COMPLETION_RADIUS and lap_cooldown == 0:
-                lap_count += 1
+                car.lap_count += 1
                 lap_end_time = time.time()
                 lap_duration = lap_end_time - car.lap_start_time
                 car.lap_times.append(lap_duration)
@@ -98,21 +98,21 @@ def main():
             if lap_cooldown > 0:
                 lap_cooldown -= 1
 
-            car.draw(screen)
             next_state = env.get_sensor_distances(car)
-
-            font.render_to(screen, (10, 10), f"Laps: {lap_count}", (255, 255, 255))
-            if car.lap_times:
-                last_lap_time = car.lap_times[-1]
-                font.render_to(screen, (10, 40), f"Last Lap: {last_lap_time:.2f}s", (255, 255, 255))
-
-            pygame.draw.circle(screen, (0, 255, 0), (int(car.x), int(car.y)), 5)
-            clock.tick(FPS)
-            pygame.display.flip()
-
 
             reward, done = env.calculate_reward(car)
             total_reward += reward
+
+            car.draw(screen)
+            pygame.draw.circle(screen, (0, 255, 0), (int(car.x), int(car.y)), 5)
+
+            font.render_to(screen, (10, 10), f"Laps: {car.lap_count}", (0, 0, 0))
+            if car.lap_times:
+                last_lap_time = car.lap_times[-1]
+                font.render_to(screen, (10, 40), f"Last Lap: {last_lap_time:.2f}s", (0, 0, 0))
+
+            pygame.display.flip()
+            clock.tick(FPS)
 
             if not EVAL_ONLY:
                 memory.push(state, action, reward, next_state, done)

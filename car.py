@@ -20,6 +20,7 @@ class Car:
         self.sensor_length = 100
         self.sensor_angles = [-90, -45, 0, 45, 90]
 
+        self.lap_count = 0
         self.lap_start_time = time.time()
         self.lap_times = []
 
