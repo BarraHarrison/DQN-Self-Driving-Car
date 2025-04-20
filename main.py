@@ -135,6 +135,10 @@ def main():
         if not EVAL_ONLY and (episode + 1) % TARGET_UPDATE_FREQ == 0:
             agent.update_target_model()
 
+        if car.lap_times:
+            export_lap_times(car.lap_times)
+
+            
     pygame.quit()
     sys.exit()
 
