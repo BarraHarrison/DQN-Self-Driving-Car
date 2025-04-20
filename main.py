@@ -5,6 +5,7 @@ import torch
 import math
 import matplotlib.pyplot as plt
 import pygame.freetype
+import os
 import csv
 from car import Car
 from environment import Environment
@@ -24,12 +25,22 @@ MODEL_PATH = "checkpoints/dqn_episode_50_reward_412.pth"
 LAP_COMPLETION_RADIUS = 100
 
 def export_lap_times(lap_times, filename="lap_times.csv"):
-    with open(filename, mode="w", newline="") as file:
+    start_lap_number = 1
+    if os.path.exists(filename):
+        with open(filename, mode="r") as file:
+            reader = csv.reader(file)
+            next(reader, None)
+            existing_laps = list(reader)
+            if existing_laps:
+                start_lap_number = int(existing_laps[-1][0]) + 1
+
+    with open(filename, mode="a", newline="") as file:
         writer = csv.writer(file)
-        writer.writerow(["Lap Number", "Lap Time (seconds)"])
-        for i, lap_time in enumerate(lap_times, 1):
-            writer.writerow([i, round(lap_time, 2)])
-    print(f"📤 Lap times exported to {filename}")
+        if os.stat(filename).st_size == 0:
+            writer.writerow(["Lap Number", "Lap Time (seconds)"])
+        for i, laptime in enumerate(lap_times, start=start_lap_number):
+            writer.writerow([i, round(laptime, 2)])
+    print(f"📤 Lap times appended to {filename}")
 
 def main():
     pygame.init()

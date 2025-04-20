@@ -11,7 +11,7 @@ class Car:
         self.x = x
         self.y = y
         self.angle = 0
-        self.speed = 5
+        self.speed = 6
 
         self.image = self.original_image
         self.update_image()
