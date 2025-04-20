@@ -4,10 +4,13 @@ import sys
 import torch
 import math
 import matplotlib.pyplot as plt
+import numpy as np
 import pygame.freetype
 import os
 import csv
 import io
+from io import BytesIO
+from PIL import Image
 from car import Car
 from environment import Environment
 from dqn_agent import DQNAgent
@@ -45,22 +48,27 @@ def export_lap_times(lap_times, filename="lap_times.csv"):
             writer.writerow([i, round(laptime, 2)])
     print(f"📤 Lap times appended to {filename}")
 
-def render_reward_plot(episode_rewards, width=300, height=200):
-    fig = Figure(figsize=(3, 2), dpi=100)
-    canvas = FigureCanvas(fig)
-    ax = fig.add_subplot(111)
-    ax.plot(episode_rewards, color="blue")
-    ax.set_title("Reward Over Time", fontsize=10)
-    ax.set_xlabel("Episode", fontsize=8)
-    ax.set_ylabel("Reward", fontsize=8)
-    ax.tick_params(labelsize=6)
-    fig.tight_layout()
+def render_reward_plot(rewards, width=300, height=200):
+    plt.figure(figsize=(3, 2))
+    plt.plot(rewards, color='blue')
+    plt.title("Episode Rewards")
+    plt.xlabel("Episode")
+    plt.ylabel("Reward")
+    plt.tight_layout()
 
-    buf = io.BytesIO()
-    canvas.print_raw(buf)
+    buf = BytesIO()
+    plt.savefig(buf, format="png")
     buf.seek(0)
-    reward_surface = pygame.image.frombuffer(buf.read(), (width, height), "RGB")
-    buf.close()
+    plt.close()
+
+    img = Image.open(buf).convert("RGB")
+    img = img.resize((width, height))
+
+    mode = img.mode
+    size = img.size
+    data = img.tobytes()
+    reward_surface = pygame.image.fromstring(data, size, mode)
+
     return reward_surface
 
 def main():
