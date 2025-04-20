@@ -31,6 +31,8 @@ EVAL_ONLY = True
 MODEL_PATH = "checkpoints/dqn_episode_50_reward_412.pth"
 LAP_COMPLETION_RADIUS = 100
 
+frames = []
+
 def export_lap_times(lap_times, filename="lap_times.csv"):
     start_lap_number = 1
     if os.path.exists(filename):
@@ -197,14 +199,6 @@ def main():
             all_lap_times.extend(car.lap_times)
             export_lap_times(all_lap_times)
 
-
-    if frames:
-        imageio.mimsave("simulation_replay.gif", frames, fps=30)
-        print("🎥 Simulation replay saved as simulation_replay.gif")
-    
-    pygame.quit()
-    sys.exit()
-
     if not EVAL_ONLY:
         plt.plot(episode_rewards)
         plt.xlabel("Episode")
@@ -213,4 +207,13 @@ def main():
         plt.show()
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n🚫 Program interrupted by user.")
+    finally:
+        if frames:
+            imageio.mimsave("simulation_replay.gif", frames, fps=30)
+            print("🎥 Simulation replay saved as simulation_replay.gif")
+        pygame.quit()
+        sys.exit()
