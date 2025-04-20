@@ -198,12 +198,11 @@ def main():
             export_lap_times(all_lap_times)
 
 
-    pygame.quit()
-
     if frames:
         imageio.mimsave("simulation_replay.gif", frames, fps=30)
         print("🎥 Simulation replay saved as simulation_replay.gif")
-        
+    
+    pygame.quit()
     sys.exit()
 
     if not EVAL_ONLY:
