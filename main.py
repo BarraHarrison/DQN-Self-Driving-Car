@@ -5,6 +5,7 @@ import torch
 import math
 import matplotlib.pyplot as plt
 import pygame.freetype
+import csv
 from car import Car
 from environment import Environment
 from dqn_agent import DQNAgent
@@ -21,6 +22,14 @@ LOAD_MODEL = True
 EVAL_ONLY = True
 MODEL_PATH = "checkpoints/dqn_episode_50_reward_412.pth"
 LAP_COMPLETION_RADIUS = 100
+
+def export_lap_times(lap_times, filename="lap_times.csv"):
+    with open(filename, mode="w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(["Lap Number", "Lap Time (seconds)"])
+        for i, lap_time in enumerate(lap_times, 1):
+            writer.writerow([i, round(lap_time, 2)])
+    print(f"📤 Lap times exported to {filename}")
 
 def main():
     pygame.init()
