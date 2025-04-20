@@ -5,6 +5,7 @@ import torch
 import math
 import matplotlib.pyplot as plt
 import numpy as np
+import imageio
 import pygame.freetype
 import os
 import csv
@@ -103,6 +104,7 @@ def main():
     print("Pixel color at spawn:", original_map.get_at((spawn_x, spawn_y)))
     episode_rewards = []
     all_lap_times = []
+    frames = []
 
     for episode in range(MAX_EPISODES):
         car = Car(spawn_x, spawn_y)
@@ -166,7 +168,12 @@ def main():
                 plot_x = (WIDTH - reward_plot_surface.get_width()) // 2
                 plot_y = (HEIGHT - reward_plot_surface.get_height()) // 2
                 screen.blit(reward_plot_surface, (plot_x, plot_y))
+
             pygame.draw.circle(screen, (0, 255, 0), (int(car.x), int(car.y)), 5)
+
+            frame = pygame.surfarray.array3d(screen)
+            frame = np.transpose(frame, (1, 0, 2))
+            frames.append(frame)
             pygame.display.flip()
             clock.tick(FPS)
 
@@ -192,6 +199,11 @@ def main():
 
 
     pygame.quit()
+
+    if frames:
+        imageio.mimsave("simulation_replay.gif", frames, fps=30)
+        print("🎥 Simulation replay saved as simulation_replay.gif")
+        
     sys.exit()
 
     if not EVAL_ONLY:
