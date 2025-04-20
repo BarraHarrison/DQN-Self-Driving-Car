@@ -7,10 +7,13 @@ import matplotlib.pyplot as plt
 import pygame.freetype
 import os
 import csv
+import io
 from car import Car
 from environment import Environment
 from dqn_agent import DQNAgent
 from replay_buffer import ReplayBuffer
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
 
 
 WIDTH, HEIGHT = 800, 700
@@ -41,6 +44,24 @@ def export_lap_times(lap_times, filename="lap_times.csv"):
         for i, laptime in enumerate(lap_times, start=start_lap_number):
             writer.writerow([i, round(laptime, 2)])
     print(f"📤 Lap times appended to {filename}")
+
+def render_reward_plot(episode_rewards, width=300, height=200):
+    fig = Figure(figsize=(3, 2), dpi=100)
+    canvas = FigureCanvas(fig)
+    ax = fig.add_subplot(111)
+    ax.plot(episode_rewards, color="blue")
+    ax.set_title("Reward Over Time", fontsize=10)
+    ax.set_xlabel("Episode", fontsize=8)
+    ax.set_ylabel("Reward", fontsize=8)
+    ax.tick_params(labelsize=6)
+    fig.tight_layout()
+
+    buf = io.BytesIO()
+    canvas.print_raw(buf)
+    buf.seek(0)
+    reward_surface = pygame.image.frombuffer(buf.read(), (width, height), "RGB")
+    buf.close()
+    return reward_surface
 
 def main():
     pygame.init()
@@ -133,11 +154,17 @@ def main():
                 for s, a, r, s_next, d in zip(*batch):
                     agent.train_step(s, a, r, s_next, d)
 
+            if "reward_plot_surface" in locals():
+                screen.blit(reward_plot_surface, (WIDTH - 310, 10))
             pygame.draw.circle(screen, (0, 255, 0), (int(car.x), int(car.y)), 5)
             pygame.display.flip()
             clock.tick(FPS)
 
         episode_rewards.append(total_reward)
+
+        if episode % 3 == 0:
+            reward_plot_surface = render_reward_plot(episode_rewards)
+
         all_lap_times.extend(car.lap_times)
         print(f"Episode {episode + 1} | Total Reward: {total_reward:.2f} | Laps: {lap_count} | Epsilon: {agent.epsilon:.3f}")
 
