@@ -19,7 +19,7 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 
 
-WIDTH, HEIGHT = 800, 700
+WIDTH, HEIGHT = 800, 900
 FPS = 60
 MAX_EPISODES = 500
 BATCH_SIZE = 64
@@ -163,7 +163,7 @@ def main():
                     agent.train_step(s, a, r, s_next, d)
 
             if "reward_plot_surface" in locals():
-                screen.blit(reward_plot_surface, (10, HEIGHT - 210))
+                screen.blit(reward_plot_surface, (10, 710))
             pygame.draw.circle(screen, (0, 255, 0), (int(car.x), int(car.y)), 5)
             pygame.display.flip()
             clock.tick(FPS)
