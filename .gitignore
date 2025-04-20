@@ -1,3 +1,4 @@
 venv/
 .DS_Store
 checkpoints/
+lap_times.csv

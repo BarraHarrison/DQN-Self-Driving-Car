@@ -138,7 +138,8 @@ def main():
         if not EVAL_ONLY and (episode + 1) % TARGET_UPDATE_FREQ == 0:
             agent.update_target_model()
 
-        if all_lap_times:
+        if car.lap_times:
+            all_lap_times.extend(car.lap_times)
             export_lap_times(all_lap_times)
 
 
