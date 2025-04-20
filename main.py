@@ -62,9 +62,11 @@ def main():
     pygame.draw.rect(screen, (0, 255, 255), START_LINE_RECT, 2)
     print("Pixel color at spawn:", original_map.get_at((spawn_x, spawn_y)))
     episode_rewards = []
+    all_lap_times = []
 
     for episode in range(MAX_EPISODES):
         car = Car(spawn_x, spawn_y)
+        car.lap_times = []
         lap_count = 0
         was_far_enough = False
         lap_cooldown = 0
@@ -125,6 +127,7 @@ def main():
             clock.tick(FPS)
 
         episode_rewards.append(total_reward)
+        all_lap_times.extend(car.lap_times)
         print(f"Episode {episode + 1} | Total Reward: {total_reward:.2f} | Laps: {lap_count} | Epsilon: {agent.epsilon:.3f}")
 
         if not EVAL_ONLY and total_reward >= 400:
@@ -135,10 +138,10 @@ def main():
         if not EVAL_ONLY and (episode + 1) % TARGET_UPDATE_FREQ == 0:
             agent.update_target_model()
 
-        if car.lap_times:
-            export_lap_times(car.lap_times)
+        if all_lap_times:
+            export_lap_times(all_lap_times)
 
-            
+
     pygame.quit()
     sys.exit()
 
