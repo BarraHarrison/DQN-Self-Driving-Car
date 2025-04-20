@@ -163,7 +163,7 @@ def main():
                     agent.train_step(s, a, r, s_next, d)
 
             if "reward_plot_surface" in locals():
-                screen.blit(reward_plot_surface, (WIDTH - 310, 10))
+                screen.blit(reward_plot_surface, (10, HEIGHT - 210))
             pygame.draw.circle(screen, (0, 255, 0), (int(car.x), int(car.y)), 5)
             pygame.display.flip()
             clock.tick(FPS)
