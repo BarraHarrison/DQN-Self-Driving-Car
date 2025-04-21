@@ -119,6 +119,12 @@ def main():
         done = False
 
         while not done:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    done = True
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                    done = True
+
             screen.blit(track, (0, 0))
 
             state = env.get_sensor_distances(car)
@@ -169,13 +175,6 @@ def main():
                 plot_x = (WIDTH - reward_plot_surface.get_width()) // 2
                 plot_y = (HEIGHT - reward_plot_surface.get_height()) // 2
                 screen.blit(reward_plot_surface, (plot_x, plot_y))
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    done = True
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                    done = True
-
 
             pygame.draw.circle(screen, (0, 255, 0), (int(car.x), int(car.y)), 5)
 
