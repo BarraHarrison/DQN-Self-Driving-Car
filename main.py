@@ -5,7 +5,6 @@ import torch
 import math
 import matplotlib.pyplot as plt
 import numpy as np
-import imageio
 import pygame.freetype
 import os
 import csv
@@ -19,7 +18,6 @@ from replay_buffer import ReplayBuffer
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 
-
 WIDTH, HEIGHT = 800, 700
 FPS = 60
 MAX_EPISODES = 500
@@ -30,8 +28,6 @@ LOAD_MODEL = True
 EVAL_ONLY = True
 MODEL_PATH = "checkpoints/dqn_episode_50_reward_412.pth"
 LAP_COMPLETION_RADIUS = 100
-
-frames = []
 
 def export_lap_times(lap_times, filename="lap_times.csv"):
     start_lap_number = 1
@@ -94,11 +90,10 @@ def main():
     memory = ReplayBuffer(REPLAY_CAPACITY)
 
     if LOAD_MODEL:
-            agent.model.load_state_dict(torch.load(MODEL_PATH, map_location=torch.device('cpu')))
-            agent.model.eval()
-            agent.epsilon = 0.1
-            print(f"📥 Loaded model from: {MODEL_PATH}")
-
+        agent.model.load_state_dict(torch.load(MODEL_PATH, map_location=torch.device('cpu')))
+        agent.model.eval()
+        agent.epsilon = 0.1
+        print(f"📅 Loaded model from: {MODEL_PATH}")
 
     spawn_x, spawn_y = 460, 600
     START_LINE_RECT = pygame.Rect(430, 580, 80, 40)
@@ -118,17 +113,13 @@ def main():
         lap_count = 0
         was_far_enough = False
         lap_cooldown = 0
-        start_pos = pygame.Vector2(spawn_x, spawn_y)
         car.angle = 0
         total_reward = 0
         done = False
 
         while not done:
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-                    done = True
-                elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                     running = False
                     done = True
 
@@ -155,7 +146,7 @@ def main():
                 lap_end_time = time.time()
                 lap_duration = lap_end_time - car.lap_start_time
                 car.lap_times.append(lap_duration)
-                print(f"🏁 Lap completed! Total laps: {lap_count}")
+                print(f"🏎️ Lap completed! Total laps: {lap_count}")
                 print(f"⏱️ Lap time: {lap_duration:.2f} seconds")
                 car.lap_start_time = lap_end_time
                 was_far_enough = False
@@ -184,10 +175,6 @@ def main():
                 screen.blit(reward_plot_surface, (plot_x, plot_y))
 
             pygame.draw.circle(screen, (0, 255, 0), (int(car.x), int(car.y)), 5)
-
-            frame = pygame.surfarray.array3d(screen)
-            frame = np.transpose(frame, (1, 0, 2))
-            frames.append(frame)
             pygame.display.flip()
             clock.tick(FPS)
 
@@ -208,17 +195,10 @@ def main():
             agent.update_target_model()
 
         if car.lap_times:
-            all_lap_times.extend(car.lap_times)
             export_lap_times(all_lap_times)
 
     pygame.quit()
-    return frames
+    sys.exit()
 
 if __name__ == "__main__":
     main()
-    if frames:
-        print("🧠 Saving simulation as GIF, please wait...")
-        imageio.mimsave("simulation_replay.gif", frames, fps=30)
-        print("🎥 Simulation replay saved as simulation_replay.gif")
-    pygame.quit()
-    sys.exit()
