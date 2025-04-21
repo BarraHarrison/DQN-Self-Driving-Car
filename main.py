@@ -107,7 +107,12 @@ def main():
     episode_rewards = []
     all_lap_times = []
 
+    running = True
+
     for episode in range(MAX_EPISODES):
+        if not running:
+            break
+
         car = Car(spawn_x, spawn_y)
         car.lap_times = []
         lap_count = 0
@@ -121,8 +126,10 @@ def main():
         while not done:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    running = False
                     done = True
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                    running = False
                     done = True
 
             screen.blit(track, (0, 0))
