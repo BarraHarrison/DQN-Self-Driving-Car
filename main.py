@@ -106,7 +106,7 @@ def main():
     print("Pixel color at spawn:", original_map.get_at((spawn_x, spawn_y)))
     episode_rewards = []
     all_lap_times = []
-    frames = []
+    # frames = []
 
     for episode in range(MAX_EPISODES):
         car = Car(spawn_x, spawn_y)
@@ -199,21 +199,18 @@ def main():
             all_lap_times.extend(car.lap_times)
             export_lap_times(all_lap_times)
 
-    if not EVAL_ONLY:
-        plt.plot(episode_rewards)
-        plt.xlabel("Episode")
-        plt.ylabel("Total Reward")
-        plt.title("Training Progress")
-        plt.show()
+    pygame.quit()
+    return frames
 
 if __name__ == "__main__":
     try:
-        main()
+        frames = main()
     except KeyboardInterrupt:
         print("\n🚫 Program interrupted by user.")
     finally:
+        pygame.quit()
         if frames:
+            print("🧠 Saving simulation as GIF, please wait...")
             imageio.mimsave("simulation_replay.gif", frames, fps=30)
             print("🎥 Simulation replay saved as simulation_replay.gif")
-        pygame.quit()
         sys.exit()
