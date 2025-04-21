@@ -106,7 +106,6 @@ def main():
     print("Pixel color at spawn:", original_map.get_at((spawn_x, spawn_y)))
     episode_rewards = []
     all_lap_times = []
-    # frames = []
 
     for episode in range(MAX_EPISODES):
         car = Car(spawn_x, spawn_y)
@@ -171,6 +170,13 @@ def main():
                 plot_y = (HEIGHT - reward_plot_surface.get_height()) // 2
                 screen.blit(reward_plot_surface, (plot_x, plot_y))
 
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    done = True
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                    done = True
+
+
             pygame.draw.circle(screen, (0, 255, 0), (int(car.x), int(car.y)), 5)
 
             frame = pygame.surfarray.array3d(screen)
@@ -203,14 +209,10 @@ def main():
     return frames
 
 if __name__ == "__main__":
-    try:
-        frames = main()
-    except KeyboardInterrupt:
-        print("\n🚫 Program interrupted by user.")
-    finally:
-        pygame.quit()
-        if frames:
-            print("🧠 Saving simulation as GIF, please wait...")
-            imageio.mimsave("simulation_replay.gif", frames, fps=30)
-            print("🎥 Simulation replay saved as simulation_replay.gif")
-        sys.exit()
+    main()
+    if frames:
+        print("🧠 Saving simulation as GIF, please wait...")
+        imageio.mimsave("simulation_replay.gif", frames, fps=30)
+        print("🎥 Simulation replay saved as simulation_replay.gif")
+    pygame.quit()
+    sys.exit()
