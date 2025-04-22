@@ -159,6 +159,10 @@ def main():
 
             next_state = env.get_sensor_distances(car)
             reward, done = env.calculate_reward(car)
+
+            if total_reward > 300:
+                reward += 10
+                
             total_reward += reward
 
             if not EVAL_ONLY:
@@ -177,10 +181,6 @@ def main():
             pygame.draw.circle(screen, (0, 255, 0), (int(car.x), int(car.y)), 5)
             pygame.display.flip()
             clock.tick(FPS)
-
-        if total_reward > 300:
-            total_reward += 100
-            print("🎁 Bonus! +100 reward for great performance.")
 
         episode_rewards.append(total_reward)
 
