@@ -186,16 +186,16 @@ def main():
         all_lap_times.extend(car.lap_times)
         print(f"Episode {episode + 1} | Total Reward: {total_reward:.2f} | Laps: {lap_count} | Epsilon: {agent.epsilon:.3f}")
 
-        recent_rewards = episode_rewards[-10:]
-        avg_recent_reward = sum(recent_rewards) / len(recent_rewards)
-        best_lap_time = min(all_lap_times) if all_lap_times else None
-        total_laps = len(all_lap_times)
-
-        print(f"📊 Avg Reward (last 10): {avg_recent_reward:.2f}")
-        if best_lap_time:
+        print("\n📈 Session Summary")
+        print("=" * 40)
+        if episode_rewards:
+            avg_total_reward = sum(episode_rewards) / len(episode_rewards)
+            print(f"📊 Average Reward (all episodes): {avg_total_reward:.2f}")
+        if all_lap_times:
+            best_lap_time = min(all_lap_times)
             print(f"🏅 Best Lap Time: {best_lap_time:.2f} sec")
-        print(f"🔁 Total Laps This Session: {total_laps}")
-        print("-" * 50)
+        print(f"🔁 Total Laps Completed: {len(all_lap_times)}")
+        print("=" * 40)
 
         if not EVAL_ONLY and total_reward >= 400:
             model_path = f"checkpoints/dqn_episode_{episode + 1}_reward_{int(total_reward)}.pth"
