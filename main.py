@@ -186,6 +186,17 @@ def main():
         all_lap_times.extend(car.lap_times)
         print(f"Episode {episode + 1} | Total Reward: {total_reward:.2f} | Laps: {lap_count} | Epsilon: {agent.epsilon:.3f}")
 
+        recent_rewards = episode_rewards[-10:]
+        avg_recent_reward = sum(recent_rewards) / len(recent_rewards)
+        best_lap_time = min(all_lap_times) if all_lap_times else None
+        total_laps = len(all_lap_times)
+
+        print(f"📊 Avg Reward (last 10): {avg_recent_reward:.2f}")
+        if best_lap_time:
+            print(f"🏅 Best Lap Time: {best_lap_time:.2f} sec")
+        print(f"🔁 Total Laps This Session: {total_laps}")
+        print("-" * 50)
+
         if not EVAL_ONLY and total_reward >= 400:
             model_path = f"checkpoints/dqn_episode_{episode + 1}_reward_{int(total_reward)}.pth"
             torch.save(agent.model.state_dict(), model_path)
