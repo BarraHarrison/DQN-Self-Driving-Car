@@ -159,10 +159,6 @@ def main():
 
             next_state = env.get_sensor_distances(car)
             reward, done = env.calculate_reward(car)
-
-            if total_reward > 300:
-                reward += 10
-                
             total_reward += reward
 
             if not EVAL_ONLY:
