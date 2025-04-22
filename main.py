@@ -178,6 +178,10 @@ def main():
             pygame.display.flip()
             clock.tick(FPS)
 
+        if total_reward > 300:
+            total_reward += 100
+            print("🎁 Bonus! +100 reward for great performance.")
+
         episode_rewards.append(total_reward)
 
         if episode % 3 == 0:
