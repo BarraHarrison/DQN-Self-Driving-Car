@@ -186,17 +186,6 @@ def main():
         all_lap_times.extend(car.lap_times)
         print(f"Episode {episode + 1} | Total Reward: {total_reward:.2f} | Laps: {lap_count} | Epsilon: {agent.epsilon:.3f}")
 
-        print("\n📈 Session Summary")
-        print("=" * 40)
-        if episode_rewards:
-            avg_total_reward = sum(episode_rewards) / len(episode_rewards)
-            print(f"📊 Average Reward (all episodes): {avg_total_reward:.2f}")
-        if all_lap_times:
-            best_lap_time = min(all_lap_times)
-            print(f"🏅 Best Lap Time: {best_lap_time:.2f} sec")
-        print(f"🔁 Total Laps Completed: {len(all_lap_times)}")
-        print("=" * 40)
-
         if not EVAL_ONLY and total_reward >= 400:
             model_path = f"checkpoints/dqn_episode_{episode + 1}_reward_{int(total_reward)}.pth"
             torch.save(agent.model.state_dict(), model_path)
@@ -207,6 +196,18 @@ def main():
 
         if car.lap_times:
             export_lap_times(all_lap_times)
+
+    print("\n📈 Session Summary")
+    print("=" * 40)
+    if episode_rewards:
+        avg_total_reward = sum(episode_rewards) / len(episode_rewards)
+        print(f"📊 Average Reward (all episodes): {avg_total_reward:.2f}")
+    if all_lap_times:
+        best_lap_time = min(all_lap_times)
+        print(f"🏅 Best Lap Time: {best_lap_time:.2f} sec")
+    print(f"🔁 Total Laps Completed: {len(all_lap_times)}")
+    print("=" * 40)
+
 
     pygame.quit()
     sys.exit()
